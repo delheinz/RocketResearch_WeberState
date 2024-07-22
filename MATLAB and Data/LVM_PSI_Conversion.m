@@ -1,18 +1,26 @@
-file = AnalogTestPID200SP;
+file = ManualTesting600SLM830PSI71620245;
 time = file(:,1);
-supply_pressure = file(:,2);
-massflow = file(:,3);
+supply_pressure = file(:,2)*110;
+second_transducer = file(:,3)*110;
+massflow = file(:,4)*200;
+temp = file(:,5);
+outputvolt=file(:,6)*100;
 %temp_file = DataFileTempCBAM;
 %secondfile = DataFileThrustWoodenNozzleFirstTest;  
 %time_1 = secondfile(:,1);
 %temp = resample(temp_file(:,2),3420, 4320);
 %temp = temp_file(:,2);
 %final = [time(:), supply_pressure(:), chamber_pressure(:), massflow(:), thrust(:),temp(:)];
-figure; plot(massflow)
+figure; plot(time,massflow,time,supply_pressure,time,second_transducer,time,outputvolt);
+%%
+figure;plot(massflow)
 [x1,y1] = ginput;
 [x2,y2] = ginput;
-extracteddata=massflow(x1:x2);
-figure;plot(extracteddata)
+extracteddata_out=massflow(x1:x2);
+extracteddata_in=outputvolt(x1:x2);
+figure;plot(extracteddata_out)
+%%
+figure;plot(outputvolt)
 %writematrix(final,'DataFile_CBAM_042024.xlsx')
 %figure;plot(time(7000:9420,1), supply_pressure(7000:9420,1), time(7000:9420,1), chamber_pressure(7000:9420,1), time(7000:9420,1), massflow(7000:9420,1),time(7000:9420,1), thrust(7000:9420,1))
 %figure; 
@@ -88,6 +96,8 @@ plot(flow_50(x11:x12),'cyan')
 hold on
 plot(vol_flow_Seq(x13:x14))
 legend('27','32.4','34.2','36','45','90')
+%%
+figure;plot(MVT_2,volt_input(x15:x16))
 %% Data Analysis of unique dataset
 file2 = ValveCurveCloseToOpen62320247Copy;
 vol_flow=file2(:,5)*200;
@@ -99,7 +109,7 @@ slope=(100-20)/(5.067-1.0134);
 MVT_2=volt_input(x15:x16)*slope/100;
 output_flow=vol_flow(x15:x16);
 figure;
-plot(MVT_2,output)
+plot(MVT_2,output_flow)
 %[x17,y17]=ginput;
 %% Trying to use computational tools to find the best fit, work in progress
 initialParam = [0.3665,0.1,2890];
@@ -114,12 +124,12 @@ yFit = ExponentialFit(fitparams,xFit);
 plot(xFit,yFit)
 %% #####################################################
 % Use this to play with Curve Fit Parameters
-initialParam = [0.3665,0.2,2800];
+initialParam = [0.315,0.195,35000];
 yaxis = ExponentialFit(initialParam,MVT_2); %Specify what you want as the independent variable in the second parameter
 B=find(yaxis>0.5); % Will find all the indexes where output is greater than 0.5
 figure;plot(MVT_2(B),yaxis(B)/36,'black') %Plots all the values based on the index condition
 hold on
-plot(MVT_2,output_pressure)
+plot(MVT_2,output_flow)
 %% Trying to interpolate data into the model curve. Work in progress.
 xaxis = output_pressure;
 x_unique=unique(xaxis);
@@ -128,3 +138,7 @@ xi=0:0.01:1;
 yi = interp1(x_unique,yaxis,xi,'spline');
 figure;
 plot(xi,yi/36)
+%%
+mass=unnamed(:,1);
+cross =unnamed(:,2);
+figure;plot(mass,cross)
