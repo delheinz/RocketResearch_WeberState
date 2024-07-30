@@ -1,17 +1,34 @@
-file = ManualTesting600SLM830PSI71620245;
+file = GraphiteTestStepInputSeq61920242;
 time = file(:,1);
 supply_pressure = file(:,2)*110;
-second_transducer = file(:,3)*110;
-massflow = file(:,4)*200;
-temp = file(:,5);
-outputvolt=file(:,6)*100;
+chamber_pressure = file(:,3)*72.5;
+vol_flow = file(:,4)*200;
+thrust = file(:,5);
+temp = file(:,6);
+outputvolt=file(:,7);
 %temp_file = DataFileTempCBAM;
 %secondfile = DataFileThrustWoodenNozzleFirstTest;  
 %time_1 = secondfile(:,1);
 %temp = resample(temp_file(:,2),3420, 4320);
 %temp = temp_file(:,2);
-%final = [time(:), supply_pressure(:), chamber_pressure(:), massflow(:), thrust(:),temp(:)];
-figure; plot(time,massflow,time,supply_pressure,time,second_transducer,time,outputvolt);
+
+figure; plot(chamber_pressure);
+[x1,y1] = ginput;
+[x2,y2] = ginput;
+time1=time(x1:x2);
+supply_pressure1=supply_pressure(x1:x2);
+%second_transducer1=second_transducer(x1:x2);
+chamber_pressure1=chamber_pressure(x1:x2);
+vol_flow1=vol_flow(x1:x2);
+thrust1=thrust(x1:x2);
+temp1=temp(x1:x2);
+outputvolt1=outputvolt(x1:x2);
+%#write to excel
+%final = [time1(:), supply_pressure1(:),second_transducer1(:), chamber_pressure1(:), vol_flow1(:), thrust1(:),temp1(:),outputvolt1(:)];
+%writematrix(final,'PIDControlTest_07_25_2024.xlsx')
+%%
+%figure; plot(time1,vol_flow1,time1,supply_pressure1,time1,second_transducer1,time1,outputvolt1*200,time1,chamber_pressure1);
+figure;plot(time1,chamber_pressure1,time1,outputvolt1*50)
 %%
 figure;plot(massflow)
 [x1,y1] = ginput;
@@ -21,7 +38,6 @@ extracteddata_in=outputvolt(x1:x2);
 figure;plot(extracteddata_out)
 %%
 figure;plot(outputvolt)
-%writematrix(final,'DataFile_CBAM_042024.xlsx')
 %figure;plot(time(7000:9420,1), supply_pressure(7000:9420,1), time(7000:9420,1), chamber_pressure(7000:9420,1), time(7000:9420,1), massflow(7000:9420,1),time(7000:9420,1), thrust(7000:9420,1))
 %figure; 
 %plot(time, supply_pressure,time, chamber_pressure,time, (massflow*62430)-243.6, time, thrust)
