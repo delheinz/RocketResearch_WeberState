@@ -1,34 +1,104 @@
-file = GraphiteTestStepInputSeq61920242;
+file = PIDControlTest72520245;
 time = file(:,1);
 supply_pressure = file(:,2)*110;
-chamber_pressure = file(:,3)*72.5;
-vol_flow = file(:,4)*200;
-thrust = file(:,5);
-temp = file(:,6);
-outputvolt=file(:,7);
+second_pressure = file(:,3)*110;
+chamber_pressure = file(:,4)*110;
+vol_flow = file(:,5)*200;
+thrust = file(:,6);
+temp = file(:,7);
+outputvolt=file(:,8);
 %temp_file = DataFileTempCBAM;
 %secondfile = DataFileThrustWoodenNozzleFirstTest;  
 %time_1 = secondfile(:,1);
 %temp = resample(temp_file(:,2),3420, 4320);
 %temp = temp_file(:,2);
-
-figure; plot(chamber_pressure);
+slope=(100-20)/(5.067-1.0134);
+figure; plot(vol_flow);
 [x1,y1] = ginput;
 [x2,y2] = ginput;
 time1=time(x1:x2);
 supply_pressure1=supply_pressure(x1:x2);
-%second_transducer1=second_transducer(x1:x2);
 chamber_pressure1=chamber_pressure(x1:x2);
+second_pressure1=second_pressure(x1:x2);
 vol_flow1=vol_flow(x1:x2);
-thrust1=thrust(x1:x2);
+%vol_flow1=((-1*log(1 - vol_flow(x1:x2)/780))*0.265)+0.295;
 temp1=temp(x1:x2);
 outputvolt1=outputvolt(x1:x2);
+%%
+figure;plot(time1,chamber_pressure1,'Color',[0 0 1])
+hold on
+plot(time1, second_pressure1)
+hold on
+plot(time1,second_pressure1-chamber_pressure1)
+%%
+file2= Filterthrust;
+thrust = file2(:,1);
+thrust1=thrust(x1:x2);
+figure;plot(thrust1)
+%%
+% conversion to mass flow ....
+
+kelvin = (temp1-32)/1.8 + 273.15;
+lpm = (vol_flow1 .* (kelvin/273.15));
+factor = 14.504 ./ supply_pressure1;
+lpm1=lpm .* factor;
+lpm1=lpm1 * 1/(60*1000);
+density=supply_pressure1*6894.76*32/8314.344;
+frac_kel= 1 ./kelvin;
+new_dens=density .* frac_kel;
+mass_flow = new_dens .* lpm1;
+figure;plot(mass_flow)
 %#write to excel
 %final = [time1(:), supply_pressure1(:),second_transducer1(:), chamber_pressure1(:), vol_flow1(:), thrust1(:),temp1(:),outputvolt1(:)];
 %writematrix(final,'PIDControlTest_07_25_2024.xlsx')
 %%
-%figure; plot(time1,vol_flow1,time1,supply_pressure1,time1,second_transducer1,time1,outputvolt1*200,time1,chamber_pressure1);
-figure;plot(time1,chamber_pressure1,time1,outputvolt1*50)
+figure;plot(mass_flow)
+%%
+time2 = linspace(0,(25636-1)*0.000560,25636);
+time2 = transpose(time2);
+a=0*ones(1271,1);
+setpoint=14*ones(25636-1271,1);
+calc=[a;setpoint];
+%%
+figure;
+p2=plot(time2,calc,'LineWidth',1,'Color',[0 0 0],'LineStyle','--');
+hold on;
+yyaxis left
+ylabel('Mass Flow Rate [g/s]')
+bx=gca;
+bx.YColor = [0 0 1];
+p1 = plot(time2,mass_flow*1000,'LineWidth',1.8,'Color',[0 0 1]);
+xlabel('Time [s]')
+title('Process Variables vs Time')
+
+hold on;
+yyaxis right
+p3=plot(time2,chamber_pressure1,'LineWidth',1.5,'Color',[1 0 0]);
+ylabel('Chamber Pressure [PSI]','Color',[1 0 0])
+ax = gca;
+ax.YColor = [1 0 0];
+
+
+legend([p2,p1,p3],{'Set-point',"Mass Flow m_x","Chamber Pressure P_C"})
+%%
+figure;p4=plot(time2,thrust1-12.5,'LineWidth',1,'Color',[0.4660 0.6740 0.1880],'LineStyle','-');
+legend(p4,"Thrust F")
+xlabel('Time [s]')
+ylabel('Thrust [lb]')
+
+
+%%
+hold on;
+p2 = plot(time1,outputvolt1*255,'LineWidth',1.5,'Color',[1 0 0]);
+legend([p2,p1],{'Chamber Pressure P_C','Volumetric Flow SLM'})
+
+%%
+figure; plot(time1,vol_flow1,time1,second_pressure1);
+%figure;plot(time1,chamber_pressure1,time1,outputvolt1*50)
+%%
+(log(1-599/780)*.265)+0.295
+%%
+data1 = tdmsread("checkingtime.tdms");
 %%
 figure;plot(massflow)
 [x1,y1] = ginput;
@@ -155,6 +225,51 @@ yi = interp1(x_unique,yaxis,xi,'spline');
 figure;
 plot(xi,yi/36)
 %%
-mass=unnamed(:,1);
-cross =unnamed(:,2);
-figure;plot(mass,cross)
+file = ChamberPressureRig30PSI81920248;
+%file2=firlteredthrustStepInput;
+time = file(:,1);
+supply_pressure = file(:,2)*110;
+chamber_pressure = file(:,3)*110;
+vol_flow = file(:,4)*200;
+temp = file(:,5);
+outputvolt=file(:,6);
+%temp_file = DataFileTempCBAM;
+%secondfile = DataFileThrustWoodenNozzleFirstTest;  
+%time_1 = secondfile(:,1);
+%temp = resample(temp_file(:,2),3420, 4320);
+%temp = temp_file(:,2);
+slope=(100-20)/(5.067-1.0134);
+figure; plot(chamber_pressure);
+[x1,y1] = ginput;
+[x2,y2] = ginput;
+time1=time(x1:x2);
+supply_pressure1=supply_pressure(x1:x2);
+chamber_pressure1=chamber_pressure(x1:x2);
+vol_flow1=vol_flow(x1:x2);
+%vol_flow1=((-1*log(1 - vol_flow(x1:x2)/780))*0.265)+0.295;
+temp1=temp(x1:x2);
+outputvolt1=outputvolt(x1:x2);
+%#write to excel
+%final = [time1(:), supply_pressure1(:),second_transducer1(:), chamber_pressure1(:), vol_flow1(:), thrust1(:),temp1(:),outputvolt1(:)];
+%writematrix(final,'PIDControlTest_07_25_2024.xlsx')
+%%
+figure;
+p1 = plot(time1,chamber_pressure1,'LineWidth',1.8,'Color',[0 0 1]);
+xlabel('Time [s]')
+title('Open-Loop Test')
+
+
+yyaxis left
+ylabel('Chamber Pressure [PSI]')
+
+yyaxis right
+ylabel('Thrust [lb]')
+hold on;
+p2=plot(time1,outputvolt1+0.5,'LineWidth',1,'Color',[1 0 0],'LineStyle','--');
+ax = gca;
+ax.YColor = [0.4660 0.6740 0.1880];
+hold on;
+p3=plot(time1,thrust1-12,'Color',[0.4660 0.6740 0.1880],'LineStyle','-','LineWidth',1.8);
+
+legend([p1,p2,p3],{"P_C","Commanded V_o","Thrust F"})
+
