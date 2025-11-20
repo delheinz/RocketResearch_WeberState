@@ -32,5 +32,5 @@
     * Convert lvm to csv and generate plots
     * Skip header rows in lvm file (line 93)
     * Plot setpoint
-    * Ignore initial 50% throttle readons (by deleting first 255 rows of data)
+    * Ignore initial 50% throttle readings (by deleting first 255 rows of data)
 
