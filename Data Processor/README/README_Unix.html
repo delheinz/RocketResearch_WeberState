@@ -1,0 +1,82 @@
+<head>
+    <style>
+        body {
+            font-family : Arial, Helvetica, sans-serif;  
+        }
+    </style>
+</head>
+<h1 id="data-processor">Data Processor</h1>
+<p>This data processor takes .lvm files, converts them to .csv, and allows the user to plot data from csv files.</p>
+<hr>
+<h2 id="table-of-contents">Table of Contents</h2>
+<ul>
+<li><a href="#about">About</a></li>
+<li><a href="#installation">Installation</a></li>
+<li><a href="#usage">Usage</a></li>
+</ul>
+<hr>
+<h2 id="about">About</h2>
+<p>This is for processing LabView data from the WSU MARS Hybrid Rocket. This script runs as a webapp. It functions as follows:</p>
+<p><strong>Tab 1:</strong></p>
+<ol>
+<li>Reads .lvm files.</li>
+<li>Manipulates column data and perform calculations.</li>
+<li>Exports manipulated data in .csv format.</li>
+</ol>
+<p><strong>Tab 2:</strong></p>
+<ol>
+<li>Reads .csv files.<ul>
+<li>Works with almost any .csv file containing column headers.</li>
+</ul>
+</li>
+<li>Generate, save, and export data plots.</li>
+</ol>
+<h3 id="column-data-manipulation">Column Data Manipulation</h3>
+<p>There are several columns of data that are modified by this script:</p>
+<ul>
+<li>All pressure columns [PS, PU, PI, PC] multiplied by 110</li>
+<li>Mass Flow Rate [MDOT] calculated <ul>
+<li>PU and PD converted from units of psig to Pa</li>
+<li>Intermediate calculations for Orifice Plate Area, β (Diameter Ratio of Orifice Plate), and Upstream Densirty </li>
+<li>Mass Flow calculated</li>
+<li>Original PD column replaced with MDOT</li>
+</ul>
+</li>
+<li>Potentiometer [POT1] data converted to Valve % Open</li>
+</ul>
+<h3 id="plotting-data">Plotting Data</h3>
+<p>This app allows the user to select which columns of data are used for the x and y-axis. The y-axis supports multiple columns of data.
+Each plot can be saved and a new plot may be generated. This can be done as many times as desired.
+All saved plots can be exported and downloaded as one .png image.</p>
+<hr>
+<h2 id="installation">Installation</h2>
+<p>This section covers creating a virtual environment (venv) and the installation of required dependencies.
+<em>If Python is not installed, <a href="https://www.python.org/downloads/">click here</a> for instructions on how to install it.</em>
+<strong>Ensure</strong> dataprocessor.py <strong>and</strong> requirements.txt <strong>are located within the same folder</strong> (this should already be the case if extracted from .zip file).
+This process may be done in Terminal, Microsoft VS Code, or any terminal of choice. <em>(Note: If using VS Code, ensure the terminal is opened to Command Prompt and not Powershell.)</em></p>
+<h3 id="opening-terminal">Opening Terminal</h3>
+<ul>
+<li>In the terminal, open the directory to the folder containing dataprocessor.py.<ul>
+<li>Type &quot;cd &quot; followed by the folder address. The address can be found by right clicking on folder and selecting &quot;Copy as path&quot;. <em>Alternatively: Right click on the folder and select &quot;Open in Terminal&quot;.</em></li>
+</ul>
+</li>
+</ul>
+<h3 id="creating-virtual-envionment-venv-">Creating Virtual Envionment (venv)</h3>
+<p><strong>To create venv:</strong>
+&quot;python -m venv venv&quot;</p>
+<p><strong>To activate venv:</strong>
+&quot;source venv/bin/activate&quot;</p>
+<h3 id="install-dependencies">Install Dependencies</h3>
+<p>&quot;pip install -r requirements.txt&quot;</p>
+<p>The required dependencies must be installed for the app to work.</p>
+<hr>
+<h2 id="usage">Usage</h2>
+<p>If the terminal is not already in the venv follow these steps:</p>
+<ul>
+<li>To open the correct directory, see <a href="#opening-terminal">Opening Terminal</a></li>
+<li>To activate the venv enter &quot;source venv/bin/activate&quot;</li>
+</ul>
+<h3 id="runing-the-app">Runing the App</h3>
+<p>&quot;streamlit run dataprocessor.py&quot;</p>
+<p> -- End of README_Unix --</p>
+    
